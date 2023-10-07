@@ -48,11 +48,6 @@ abb_t *abb_insertar(abb_t *arbol, void *elemento)
 	return arbol;
 }
 
-void *abb_quitar(abb_t *arbol, void *elemento)
-{
-	return elemento;
-}
-
 nodo_abb_t* nodo_buscar(nodo_abb_t* nodo, void* elemento, abb_comparador comparador){
 	if(nodo == NULL)
 		return NULL;
@@ -65,6 +60,57 @@ nodo_abb_t* nodo_buscar(nodo_abb_t* nodo, void* elemento, abb_comparador compara
 		return nodo_buscar(nodo->izquierda, elemento, comparador);
 	else
 		return nodo_buscar(nodo->derecha, elemento, comparador);
+}
+
+nodo_abb_t* extraer_predecesor_inorden(nodo_abb_t* nodo, void** elemento_eliminado){
+	if(nodo->derecha == NULL){
+		*elemento_eliminado = nodo->elemento;
+		nodo_abb_t* izquierda = nodo->izquierda;
+		free(nodo);
+		return izquierda;
+	}
+	nodo->derecha = extraer_predecesor_inorden(nodo->derecha, elemento_eliminado);
+	return nodo;
+}
+
+void* nodo_quitar(nodo_abb_t* nodo, void* elemento, abb_comparador comparador, void** elemento_eliminado){
+	if(nodo == NULL){
+		return NULL;
+	}
+	int comparacion = comparador(elemento, nodo->elemento);
+
+	if(comparacion == 0){
+		nodo_abb_t* izquierda = nodo->izquierda;
+		nodo_abb_t* derecha = nodo->derecha;
+		*elemento_eliminado = nodo->elemento;
+
+		if(izquierda != NULL && derecha != NULL){
+			void* predecesor = NULL;
+			nodo->izquierda = extraer_predecesor_inorden(nodo->izquierda, &predecesor);
+			nodo->elemento = predecesor;
+		}else{
+			free(nodo);
+			if(izquierda == NULL)
+				return derecha;
+			return izquierda;
+		}
+	}else if(comparacion < 0)
+		nodo->izquierda = nodo_quitar(nodo->izquierda, elemento, comparador, elemento_eliminado);
+	else
+		nodo->derecha = nodo_quitar(nodo->derecha, elemento, comparador, elemento_eliminado);
+	
+	return nodo;
+}
+
+void *abb_quitar(abb_t *arbol, void *elemento)
+{	
+	if(arbol == NULL)
+		return NULL;
+	
+	void* elemento_eliminado = NULL;
+	arbol->nodo_raiz = nodo_quitar(arbol->nodo_raiz, elemento, arbol->comparador, &elemento_eliminado);
+	(arbol->tamanio)--;
+	return elemento_eliminado;
 }
 
 void *abb_buscar(abb_t *arbol, void *elemento)
