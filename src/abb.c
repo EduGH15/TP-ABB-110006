@@ -77,6 +77,7 @@ void* nodo_quitar(nodo_abb_t* nodo, void* elemento, abb_comparador comparador, v
 	if(nodo == NULL){
 		return NULL;
 	}
+
 	int comparacion = comparador(elemento, nodo->elemento);
 
 	if(comparacion == 0){
@@ -104,7 +105,7 @@ void* nodo_quitar(nodo_abb_t* nodo, void* elemento, abb_comparador comparador, v
 
 void *abb_quitar(abb_t *arbol, void *elemento)
 {	
-	if(arbol == NULL)
+	if(arbol == NULL || arbol->nodo_raiz == NULL || abb_vacio(arbol))
 		return NULL;
 	
 	void* elemento_eliminado = NULL;
@@ -271,42 +272,44 @@ size_t abb_con_cada_elemento(abb_t *arbol, abb_recorrido recorrido,
 
 }
 
+size_t abb_recorrer_inorden(nodo_abb_t* nodo, void** array, size_t tamanio_array, size_t* indice) {
+    if (nodo == NULL || *indice >= tamanio_array) {
+        return *indice;
+    }
 
-size_t abb_recorrer_inorden(nodo_abb_t* nodo, void** array, size_t tamanio_array, size_t* indice){
-	if(nodo == NULL || *indice >= tamanio_array)
-		return 0;
+    *indice = abb_recorrer_inorden(nodo->izquierda, array, tamanio_array, indice);
 
-	*indice = abb_recorrer_inorden(nodo->izquierda, array, tamanio_array, indice);
+    if (*indice < tamanio_array) {
+        array[*indice] = nodo->elemento;
+        (*indice)++;
+    }
 
-	if(*indice < tamanio_array){
-		array[*indice] = nodo->elemento;
-		(*indice)++;
-	}
-
-	*indice = abb_recorrer_inorden(nodo->derecha, array, tamanio_array, indice);
-	return *indice ;
+    *indice = abb_recorrer_inorden(nodo->derecha, array, tamanio_array, indice);
+    
+    return *indice;
 }
 
+
 size_t abb_recorrer_preorden(nodo_abb_t* nodo, void** array, size_t tamanio_array, size_t* indice){
-	if(nodo == NULL || *indice > tamanio_array)
-		return 0;
+	if(nodo == NULL || *indice >= tamanio_array)
+		return *indice;
 
 	if(*indice < tamanio_array){
 		array[*indice] = nodo->elemento;
 		(*indice)++;
 	}
 
-	*indice = abb_recorrer_inorden(nodo->izquierda, array, tamanio_array, indice);
-	*indice = abb_recorrer_inorden(nodo->derecha, array, tamanio_array, indice);
+	*indice = abb_recorrer_preorden(nodo->izquierda, array, tamanio_array, indice);
+	*indice = abb_recorrer_preorden(nodo->derecha, array, tamanio_array, indice);
 	return *indice;
 }
 
 size_t abb_recorrer_postorden(nodo_abb_t* nodo, void** array, size_t tamanio_array, size_t* indice){
-	if(nodo == NULL || *indice > tamanio_array)
-		return 0;
+	if(nodo == NULL || *indice >= tamanio_array)
+		return *indice;
 
-	*indice = abb_recorrer_inorden(nodo->izquierda, array, tamanio_array, indice);
-	*indice = abb_recorrer_inorden(nodo->derecha, array, tamanio_array, indice);
+	*indice = abb_recorrer_postorden(nodo->izquierda, array, tamanio_array, indice);
+	*indice = abb_recorrer_postorden(nodo->derecha, array, tamanio_array, indice);
 
 	if(*indice < tamanio_array){
 		array[*indice] = nodo->elemento;
@@ -315,8 +318,7 @@ size_t abb_recorrer_postorden(nodo_abb_t* nodo, void** array, size_t tamanio_arr
 
 	return *indice;
 }
-
-
+ 
 size_t abb_recorrer(abb_t *arbol, abb_recorrido recorrido, void **array,
 		    size_t tamanio_array)
 {	
