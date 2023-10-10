@@ -74,7 +74,7 @@ nodo_abb_t* extraer_predecesor_inorden(nodo_abb_t* nodo, void** elemento_elimina
 }
 
 void* nodo_quitar(nodo_abb_t* nodo, void* elemento, abb_comparador comparador, void** elemento_eliminado){
-	if(nodo == NULL){
+	if(nodo == NULL || comparador == NULL){
 		return NULL;
 	}
 
@@ -110,7 +110,13 @@ void *abb_quitar(abb_t *arbol, void *elemento)
 	
 	void* elemento_eliminado = NULL;
 	arbol->nodo_raiz = nodo_quitar(arbol->nodo_raiz, elemento, arbol->comparador, &elemento_eliminado);
-	(arbol->tamanio)--;
+
+	if(elemento_eliminado != NULL)
+		(arbol->tamanio)--;
+
+	if(arbol->nodo_raiz == NULL)
+		arbol->tamanio = 0;
+
 	return elemento_eliminado;
 }
 
