@@ -79,6 +79,95 @@ void pruebas_de_eliminacion(){
 
 }
 
+void pruebas_de_busqueda(){
+	abb_t* arbol = abb_crear(comparador);
+	int numeros[] = {5,3,4,6};
+	abb_insertar(arbol, &numeros[0]);
+	abb_insertar(arbol, &numeros[1]);
+	abb_insertar(arbol, &numeros[2]);
+
+	pa2m_afirmar(abb_buscar(arbol, &numeros[0]) == &numeros[0], "Busco el primer elemento insertado y lo encuentro");
+	pa2m_afirmar(abb_buscar(arbol, &numeros[2]) == &numeros[2], "Busco un nuevo elemento y lo encuentro");
+	pa2m_afirmar(abb_buscar(arbol, &numeros[3]) == NULL, "Busco un elemento que no está en el arbol y se devuelve NULL");
+
+	abb_quitar(arbol, &numeros[0]);
+	pa2m_afirmar(abb_buscar(arbol, &numeros[0]) == NULL, "Elimino un elemento del arbol y al buscarlo de nuevo devuelve NULL");
+
+	abb_destruir(arbol);
+
+}
+
+void pruebas_abb_recorrido_inorden() {
+    abb_t* arbol = abb_crear(comparador);
+    int numeros[] = {5, 3, 2, 4, 8, 7, 9};
+
+    for (size_t i = 0; i < 7; i++) {
+        abb_insertar(arbol, &numeros[i]);
+    }
+
+    void* elementos_inorden[7];
+    pa2m_afirmar(abb_recorrer(arbol, INORDEN, elementos_inorden, 7) == 7, "La función de recorrido preorden devuelve la cantidad de elementos esperados.");
+    pa2m_afirmar(elementos_inorden[0] == &numeros[2] && elementos_inorden[1] == &numeros[1] && elementos_inorden[2] == &numeros[3] && elementos_inorden[3] == &numeros[0] && elementos_inorden[4] == &numeros[5] && elementos_inorden[5] == &numeros[4] && elementos_inorden[6] == &numeros[6], "Los elementos en el vector tienen el orden esperado.");
+
+    void* elementos_inorden_chico[4];
+    pa2m_afirmar(abb_recorrer(arbol, INORDEN, elementos_inorden_chico, 4) == 4, "Pido recorrer menos elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_inorden_chico[0] == &numeros[2] && elementos_inorden_chico[1] == &numeros[1] && elementos_inorden_chico[2] == &numeros[3] && elementos_inorden_chico[3] == &numeros[0], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+    void* elementos_inorden_grande[10];
+    pa2m_afirmar(abb_recorrer(arbol, INORDEN, elementos_inorden_grande, 10) == 7, "Pido recorrer más elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_inorden_grande[0] == &numeros[2] && elementos_inorden_grande[1] == &numeros[1] && elementos_inorden_grande[2] == &numeros[3] && elementos_inorden_grande[3] == &numeros[0] && elementos_inorden_grande[4] == &numeros[5] && elementos_inorden_grande[5] == &numeros[4] && elementos_inorden_grande[6] == &numeros[6], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+    abb_destruir(arbol);
+}
+
+void pruebas_abb_recorrido_preorden() {
+    abb_t* arbol = abb_crear(comparador);
+    int numeros[] = {5, 3, 2, 4, 8, 7, 9};
+
+    for (size_t i = 0; i < 7; i++) {
+        abb_insertar(arbol, &numeros[i]);
+    }
+
+    void* elementos_preorden[7];
+    pa2m_afirmar(abb_recorrer(arbol, PREORDEN, elementos_preorden, 7) == 7, "La función de recorrido preorden devuelve la cantidad de elementos esperados.");
+    pa2m_afirmar(elementos_preorden[0] == &numeros[0] && elementos_preorden[1] == &numeros[1] && elementos_preorden[2] == &numeros[2] && elementos_preorden[3] == &numeros[3] && elementos_preorden[4] == &numeros[4] && elementos_preorden[5] == &numeros[5] && elementos_preorden[6] == &numeros[6], "Los elementos en el vector tienen el orden esperado.");
+
+    void* elementos_preorden_chico[4];
+    pa2m_afirmar(abb_recorrer(arbol, PREORDEN, elementos_preorden_chico, 4) == 4, "Pido recorrer menos elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_preorden_chico[0] == &numeros[0] && elementos_preorden_chico[1] == &numeros[1] && elementos_preorden_chico[2] == &numeros[2] && elementos_preorden_chico[3] == &numeros[3], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+    void* elementos_preorden_grande[10];
+    pa2m_afirmar(abb_recorrer(arbol, PREORDEN, elementos_preorden_grande, 10) == 7, "Pido recorrer más elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_preorden[0] == &numeros[0] && elementos_preorden[1] == &numeros[1] && elementos_preorden[2] == &numeros[2] && elementos_preorden[3] == &numeros[3] && elementos_preorden[4] == &numeros[4] && elementos_preorden[5] == &numeros[5] && elementos_preorden[6] == &numeros[6], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+    abb_destruir(arbol);
+}
+
+void pruebas_abb_recorrido_postorden(){
+	abb_t* arbol = abb_crear(comparador);
+    int numeros[] = {5, 3, 2, 4, 8, 7, 9};
+
+    for (size_t i = 0; i < 7; i++) {
+        abb_insertar(arbol, &numeros[i]);
+    }
+
+    void* elementos_postorden[7];
+    pa2m_afirmar(abb_recorrer(arbol, POSTORDEN, elementos_postorden, 7) == 7, "La función de recorrido postorden devuelve la cantidad de elementos esperados.");
+    pa2m_afirmar(elementos_postorden[0] == &numeros[2] && elementos_postorden[1] == &numeros[3] && elementos_postorden[2] == &numeros[1] && elementos_postorden[3] == &numeros[5] && elementos_postorden[4] == &numeros[6] && elementos_postorden[5] == &numeros[4] && elementos_postorden[6] == &numeros[0], "Los elementos en el vector tienen el orden esperado.");
+
+    
+    void* elementos_postorden_chico[4];
+    pa2m_afirmar(abb_recorrer(arbol, POSTORDEN, elementos_postorden_chico, 4) == 4, "Pido recorrer menos elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_postorden_chico[0] == &numeros[2] && elementos_postorden_chico[1] == &numeros[3] && elementos_postorden_chico[2] == &numeros[1] && elementos_postorden_chico[3] == &numeros[5], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+    void* elementos_postorden_grande[10];
+    pa2m_afirmar(abb_recorrer(arbol, POSTORDEN, elementos_postorden_grande, 10) == 7, "Pido recorrer más elementos de los existentes para hacer el recorrido.");
+    pa2m_afirmar(elementos_postorden_grande[0] == &numeros[2] && elementos_postorden_grande[1] == &numeros[3] && elementos_postorden_grande[2] == &numeros[1] && elementos_postorden_grande[3] == &numeros[5] && elementos_postorden_grande[4] == &numeros[6] && elementos_postorden_grande[5] == &numeros[4] && elementos_postorden_grande[6] == &numeros[0], "Los elementos en el vector tienen el orden y cantidad esperado.");
+
+	abb_destruir(arbol);
+}
+
+
 int main()
 {
 	pa2m_nuevo_grupo(
@@ -92,6 +181,24 @@ int main()
 	pa2m_nuevo_grupo(
 		"\n======================== Pruebas de Eliminación ========================");
 	pruebas_de_eliminacion();
+
+	pa2m_nuevo_grupo(
+		"\n======================== Pruebas de Búsqueda ========================");
+	pruebas_de_busqueda();
+
+	pa2m_nuevo_grupo(
+		"\n======================== Pruebas de Recorrido e iterador interno ========================");
+		pa2m_nuevo_grupo(
+		"\n============= iterador preorden ===============");
+		pruebas_abb_recorrido_inorden();
+
+		pa2m_nuevo_grupo(
+		"\n============= iterador preorden ===============");
+		pruebas_abb_recorrido_preorden();
+
+		pa2m_nuevo_grupo(
+		"\n============= iterador postorden ===============");
+		pruebas_abb_recorrido_postorden();
 
 	return pa2m_mostrar_reporte();
 }
