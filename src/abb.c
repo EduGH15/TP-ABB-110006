@@ -48,7 +48,6 @@ abb_t *abb_insertar(abb_t *arbol, void *elemento)
 	return arbol;
 }
 
-
 nodo_abb_t* extraer_predecesor_inorden(nodo_abb_t* nodo, void** elemento_eliminado){
 	if(nodo->derecha == NULL){
 		*elemento_eliminado = nodo->elemento;
@@ -261,7 +260,7 @@ size_t abb_con_cada_elemento_postorden(nodo_abb_t *nodo, bool (*funcion)(void *,
 size_t abb_con_cada_elemento(abb_t *arbol, abb_recorrido recorrido,
 			     bool (*funcion)(void *, void *), void *aux)
 {
-	if(arbol == NULL || arbol->nodo_raiz == NULL||funcion == NULL)
+	if(arbol == NULL || arbol->nodo_raiz == NULL || funcion == NULL)
 		return 0;
 	
 	size_t cantidad_elementos = 0;
@@ -295,7 +294,6 @@ size_t abb_recorrer_inorden(nodo_abb_t* nodo, void** array, size_t tamanio_array
     
     return *indice;
 }
-
 
 size_t abb_recorrer_preorden(nodo_abb_t* nodo, void** array, size_t tamanio_array, size_t* indice){
 	if(nodo == NULL || *indice >= tamanio_array)
