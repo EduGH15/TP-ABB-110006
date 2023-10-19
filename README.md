@@ -35,7 +35,7 @@ Entre sus operaciones básicas podemos encontrar:
 Un ejemplo de un árbol puede verse en la figura:
 
 <div align="center">
-<img width="70%" src="img/Diagrama Arbol N-Ario.png>
+<img width="70%" src="img/Diagrama Arbol N-Ario.png">
 </div>
 
 <h1>Arbol Binario</h1>
